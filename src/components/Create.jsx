@@ -7,6 +7,7 @@ import TextFrom from './forms/TextForm';
 import SelectForm from './forms/SelectFrom';
 import MultiSelectorForm from './forms/MultiSelectorForm';
 import DescriptionFrom from './forms/DescriptionForm';
+import {useFormik} from 'formik'
 
 const Create = () => {
   const [country, setCountry] = useState([])
@@ -40,9 +41,30 @@ const Create = () => {
   useEffect(()=>{
     GetData()
   }, [])
-  
+
+  const formik = useFormik({
+    initialValues: {
+      name : 'Mu',
+      description : '',
+      country : '',
+      league : '',
+      attendence : '',
+      city : '',
+      characteristics : [], //because it's multi value
+    },
+    onSubmit: (values) => {
+      AxiosInstance.post('footballclub/',values)
+      .then(() => {
+        console.log("Successfull data submition")
+      })
+    }
+  })
+   
+  console.log("form values: ", formik.values)
+   
   return (
     <div>
+      <form onSubmit={formik.handleSubmit}>
       <Box className={"TopBar"}>
         <AddBoxIcon />
         <Typography sx={{marginLeft:'15px', fontWeight:'bold'}} variant='subtitle2'>
@@ -51,15 +73,24 @@ const Create = () => {
       </Box>
 
       <Box className={"FormBox"}> 
+        
          <Box className={'FormArea'}>
-
            <TextFrom 
              label =  {'Club name'}
+             name = 'name'
+             value={formik.values.name}
+             onChange={formik.handleChange}
+             onBlur={formik.handleBlur}
+             
            />
 
-           <Box sx={{marginTop:'30px'}}>
+           <Box sx={{marginTop:'30px'}}> {/* for styling only  */}
               <TextFrom 
-              label =  {'City'}
+                label =  {'City'}
+                name = 'city'
+                value={formik.values.city}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
               />
            </Box>
            
@@ -67,46 +98,66 @@ const Create = () => {
               <SelectForm 
                 label={'League'}
                 options={league}
+                name = 'league'
+                value={formik.values.league}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
               />
            </Box>
 
-          <Box sx={{marginTop:'30px'}}>
-             <Button variant="contained" fullWidth>Submit the data</Button>
-           </Box>
+            <Box sx={{marginTop:'30px'}}>
+              <Button type='submit' variant="contained" fullWidth >Submit the data</Button>
+            </Box>
 
-         </Box>
+          </Box>
 
 
          <Box className={'FormArea'}>
 
             <SelectForm 
-            label={'Country'}
-            options={country}
-           />
+              label={'Country'}
+              options={country}
+              name = 'country'
+              value={formik.values.country}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+            />
 
-          <Box sx={{marginTop:'30px'}}>
+            <Box sx={{marginTop:'30px'}}>
               <TextFrom 
                 label =  {'Attendence'}
+                name = 'attendence'
+                value={formik.values.attendence}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
               />
+            </Box>
+
+            <Box sx={{marginTop:'30px'}}>
+            <MultiSelectorForm 
+              label =  {'Characterstic'}
+              options= {characterstic}
+              name = 'characteristics'
+              value={formik.values.characteristics}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+            />
+            </Box>
+
           </Box>
 
-          <Box sx={{marginTop:'30px'}}>
-           <MultiSelectorForm 
-             label =  {'Characterstic'}
-             options= {characterstic}
-           />
+          <Box className={'FormArea'}>
+            <DescriptionFrom 
+              label =  {'Description'}
+              rows={9}
+              name = 'description'
+              value={formik.values.description}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+            />
           </Box>
-
-         </Box>
-
-         <Box className={'FormArea'}>
-           <DescriptionFrom 
-             label =  {'Description'}
-             options= {characterstic}
-             rows={9}
-           />
-         </Box>
       </Box>
+      </form>
     </div>
   )
 }

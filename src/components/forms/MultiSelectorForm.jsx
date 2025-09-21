@@ -19,26 +19,10 @@ const MenuProps = {
   },
 };
 
-function getStyles(name, personName, theme) {
-  return {
-    fontWeight: personName.includes(name)
-      ? theme.typography.fontWeightMedium
-      : theme.typography.fontWeightRegular,
-  };
-}
 
-export default function MultiSelectorForm({label, options}) {
+export default function MultiSelectorForm({label, options,value, name, onChange, onBlur}) {
   const theme = useTheme();
-  const [personName, setPersonName] = React.useState([]);
-
-  const handleChange = (event) => {
-    const {
-      target: { value },
-    } = event;
-    setPersonName(
-      typeof value === 'string' ? value.split(',') : value,
-    );
-  };
+  
 
   return (
     <div>
@@ -48,9 +32,14 @@ export default function MultiSelectorForm({label, options}) {
           labelId="demo-multiple-chip-label"
           id="demo-multiple-chip"
           multiple
-          value={personName}
-          onChange={handleChange}
-          input={<OutlinedInput id="select-multiple-chip" label={label} />}
+           //  For Formik------
+          value = {value}
+          name = {name}
+          onChange = {onChange}
+          onBlur = { onBlur}
+          //-------------------
+          input={<OutlinedInput id="select-multiple-chip" label={label}
+           />}
           renderValue={(selected) => (
             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
               {selected.map((value) => (
@@ -67,7 +56,6 @@ export default function MultiSelectorForm({label, options}) {
             <MenuItem
               key={option.id}
               value={option.id}
-              style={getStyles(option.id, personName, theme)}
             >
               {option.name}
             </MenuItem>
