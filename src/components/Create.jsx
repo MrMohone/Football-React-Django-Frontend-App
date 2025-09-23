@@ -8,11 +8,17 @@ import SelectForm from './forms/SelectFrom';
 import MultiSelectorForm from './forms/MultiSelectorForm';
 import DescriptionFrom from './forms/DescriptionForm';
 import {useFormik} from 'formik'
+import * as yup from 'yup'  //for form validation
+import MyMessage from './forms/Message';
+import {useNavigate} from 'react-router'
 
 const Create = () => {
   const [country, setCountry] = useState([])
   const [league, setLeague] = useState([])
   const [characterstic, setCharacterstic] = useState([])
+  const [message, setMessage] = useState([])
+  const navigate = useNavigate()
+
 
   console.log('contry', country)
   console.log('league', league)
@@ -42,9 +48,24 @@ const Create = () => {
     GetData()
   }, [])
 
+  const vaildationSchema = yup.object({
+    name: yup
+         .string("The name must be text")
+         .required("Name is required"),
+    description: yup
+         .string("The description must be text")
+         .required("Description is required"),
+    attendence: yup
+         .number("Attendence must be number")
+         .required("Attendence is required"),
+    characteristics: yup
+         .array()
+         .min(1, "Select at least one option")
+  })
+
   const formik = useFormik({
     initialValues: {
-      name : 'Mu',
+      name : '',
       description : '',
       country : '',
       league : '',
@@ -52,10 +73,21 @@ const Create = () => {
       city : '',
       characteristics : [], //because it's multi value
     },
+    validationSchema: vaildationSchema, //connect form to validationSchema function
+
     onSubmit: (values) => {
       AxiosInstance.post('footballclub/',values)
       .then(() => {
         console.log("Successfull data submition")
+        setMessage(
+          <MyMessage
+            message = {'You successfully submited data'}
+            messageColor= {'green'}
+          />
+        )
+        setTimeout(()=>{
+          navigate('/')
+        }, 1500)//1.5 sec
       })
     }
   })
@@ -72,8 +104,14 @@ const Create = () => {
         </Typography>
       </Box>
 
+      {/* <MyMessage
+        message = {'You successfully submited data'}
+        messageColor= {'green'}
+      /> */}
+      {message}
+
       <Box className={"FormBox"}> 
-        
+
          <Box className={'FormArea'}>
            <TextFrom 
              label =  {'Club name'}
@@ -81,7 +119,8 @@ const Create = () => {
              value={formik.values.name}
              onChange={formik.handleChange}
              onBlur={formik.handleBlur}
-             
+             error={formik.touched.name && Boolean(formik.errors.name)}
+             helperText={formik.touched.name && formik.errors.name}
            />
 
            <Box sx={{marginTop:'30px'}}> {/* for styling only  */}
@@ -91,6 +130,8 @@ const Create = () => {
                 value={formik.values.city}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
+                error={formik.touched.city && Boolean(formik.errors.city)}
+                helperText={formik.touched.city && formik.errors.city}
               />
            </Box>
            
@@ -99,9 +140,11 @@ const Create = () => {
                 label={'League'}
                 options={league}
                 name = 'league'
-                value={formik.values.league}
-                onChange={formik.handleChange}
+                value={formik.values.league}//formik is just function located on top
+                onChange={formik.handleChange}//formik is imported library
                 onBlur={formik.handleBlur}
+                error={formik.touched.league && Boolean(formik.errors.league)}
+                helperText={formik.touched.league && formik.errors.league}
               />
            </Box>
 
@@ -121,6 +164,8 @@ const Create = () => {
               value={formik.values.country}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
+              error={formik.touched.country && Boolean(formik.errors.country)}
+              helperText={formik.touched.country && formik.errors.country}
             />
 
             <Box sx={{marginTop:'30px'}}>
@@ -130,6 +175,8 @@ const Create = () => {
                 value={formik.values.attendence}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
+                error={formik.touched.attendence && Boolean(formik.errors.attendence)}
+                helperText={formik.touched.attendence && formik.errors.attendence}
               />
             </Box>
 
@@ -141,6 +188,8 @@ const Create = () => {
               value={formik.values.characteristics}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
+              error={formik.touched.characteristics && Boolean(formik.errors.characteristics)}
+              helperText={formik.touched.characteristics && formik.errors.characteristics}
             />
             </Box>
 
@@ -154,6 +203,8 @@ const Create = () => {
               value={formik.values.description}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
+              error={formik.touched.description && Boolean(formik.errors.description)}
+              helperText={formik.touched.description && formik.errors.description}
             />
           </Box>
       </Box>
