@@ -103,11 +103,8 @@ const Create = () => {
           Create a new clube
         </Typography>
       </Box>
-
-      {/* <MyMessage
-        message = {'You successfully submited data'}
-        messageColor= {'green'}
-      /> */}
+      
+      {/* success message */}
       {message}
 
       <Box className={"FormBox"}> 
