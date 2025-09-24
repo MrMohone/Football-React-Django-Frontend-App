@@ -1,8 +1,10 @@
 import {React, useState, useEffect, useMemo} from 'react'
-import {Box, Chip, Typography} from '@mui/material'
+import {Box, Chip, IconButton, Typography} from '@mui/material'
+import {Link} from 'react-router'
 import CalendarViewMonthIcon from '@mui/icons-material/CalendarViewMonth';
 import {MaterialReactTable} from 'material-react-table'
 import AxiosInstance from './Axios';
+import EditIcon from '@mui/icons-material/Edit';
 
 const Home = () => {
   const [myData, setMyData] = useState([])
@@ -68,6 +70,15 @@ const Home = () => {
       <MaterialReactTable 
         columns={columns}
         data={myData}
+        enableRowActions
+        renderRowActions={({row}) => (
+           <Box sx={{display:'flex',flexWrap:'nowrap', gap:'8px'}}>
+             <IconButton color='primary' component={Link} to={`edit/${row.original.id}`}>
+                <EditIcon />
+             </IconButton>
+           </Box>
+          )
+        }
       />
 
 
