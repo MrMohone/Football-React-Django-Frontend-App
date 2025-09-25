@@ -14,8 +14,8 @@ import {useNavigate, useParams} from 'react-router'
 
 const Edit = () => {
 
-  const myParameters = useParams()
-  const MyId = myParameters.id
+  const myParameter = useParams()
+  const MyId = myParameter.id
   console.log('my id: ' , MyId)
 
   

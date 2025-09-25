@@ -5,6 +5,7 @@ import CalendarViewMonthIcon from '@mui/icons-material/CalendarViewMonth';
 import {MaterialReactTable} from 'material-react-table'
 import AxiosInstance from './Axios';
 import EditIcon from '@mui/icons-material/Edit';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 
 const Home = () => {
   const [myData, setMyData] = useState([])
@@ -75,6 +76,10 @@ const Home = () => {
            <Box sx={{display:'flex',flexWrap:'nowrap', gap:'8px'}}>
              <IconButton color='primary' component={Link} to={`edit/${row.original.id}`}>
                 <EditIcon />
+             </IconButton>
+
+             <IconButton color='error' component={Link} to={`delete/${row.original.id}`}>
+                <DeleteForeverIcon />
              </IconButton>
            </Box>
           )
